@@ -38,26 +38,26 @@ public:
 
 class OrderBook {
 private:
-    map<double, queue<Order>, greater<double>> buy_order;
-    map<double, queue<Order>> sell_order;
-    unordered_map<string, pair<OrderType, double>> order_tracker;
-    mutable std::shared_mutex order_mutex;
-    int order_id_counter = 0;
+    map<double, queue<Order>, greater<double>> buy_order; // Maintains all buy (bid) orders.
+    map<double, queue<Order>> sell_order;// Maintains all sell (ask) orders.
+    unordered_map<string, pair<OrderType, double>> order_tracker;// Tracks orders for cancellation.
+    mutable std::shared_mutex order_mutex;// Ensures thread-safe access.
+    int order_id_counter = 0; // Generates unique order IDs.
 
-    string getCurrentTimestamp();
-    void ExecutingTheOrder();
-    void AddBuyOrderAndExecute(const Order& order);
-    void AddSellOrderAndExecute(const Order& order);
-    void RemoveFromQueue(queue<Order>& order_queue, const string& id);
+    string getCurrentTimestamp(); // Returns the timestamp when a trade is executed.
+    void ExecutingTheOrder(); // Executes orders immediately if bid and ask match.
+    void AddBuyOrderAndExecute(const Order& order); //Adds a buy order and executes if there's a match.
+    void AddSellOrderAndExecute(const Order& order); //Adds a sell order and executes if there's a match.
+    void RemoveFromQueue(queue<Order>& order_queue, const string& id); //Removes a specific order by ID.
 
 public:
-    void CancelOrder(const string& exchange_id, int id);
-    void PlaceOrder(const string& exchange_id, OrderType order_type, double price, int quantity);
+    void CancelOrder(const string& exchange_id, int id); //// Cancels a specific order by ID.
+    void PlaceOrder(const string& exchange_id, OrderType order_type, double price, int quantity); // Places a new order.
 
     // Helper Methods for Testing
-    int GetBuyOrderQuantity(double price) const;  // Returns quantity of a buy order at a specific price
-    int GetSellOrderQuantity(double price) const; // Returns quantity of a sell order at a specific price
-    int GetTotalBuyOrders() const;  // Returns the total number of buy orders
-    int GetTotalSellOrders() const; // Returns the total number of sell orders
+    int GetBuyOrderQuantity(double price) const;   // Returns the quantity of a buy order at a specific price.
+    int GetSellOrderQuantity(double price) const; // Returns the quantity of a sell order at a specific price.
+    int GetTotalBuyOrders() const;  // Returns the total number of buy orders.
+    int GetTotalSellOrders() const; // Returns the total number of sell orders.
 };
 #endif//ORDER_BOOK_H
